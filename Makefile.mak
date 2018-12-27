@@ -32,8 +32,9 @@ BRANCH = v$(VER)-$(ARCH)
 MSVSVER =
 MSVCROOT = $(VCINSTALLDIR)
 WINSDKROOT = $(WINDOWSSDKDIR)
+MSVSYEAR = 2015
 GIT = git
-
+!message "ROOT: $(MSVCROOT)"
 !if "$(MSVCROOT)" == ""
 MSVCROOT = C:\Program Files\Microsoft Visual Studio 10.0\VC
 !endif
@@ -44,7 +45,7 @@ WINSDKROOT = C:\Program Files\Microsoft SDKs\Windows\v7.0A
 
 !include make/nmake_helper.mak
 
-MATLABROOT = C:\Program Files\MATLAB\R2017a
+MATLABROOT = C:\Program Files\MATLAB\R2015b
 MATLABVER = 90200
 MEX = "$(MATLABROOT)\bin\mex.bat"
 
@@ -74,13 +75,13 @@ MEX = "$(MATLABROOT)\bin\mex.bat"
 !if $(MATLABVER) <= 80500
 MEXOPT = "$(MATLABROOT)\bin\win64\mexopts\msvc$(MSVSVER)opts.bat"
 !else
-MEXOPT = "$(MATLABROOT)\bin\win64\mexopts\msvc$(MSVSYEAR).xml"
+MEXOPT = "$(MATLABROOT)\bin\win64\mexopts\msvc2015.xml"
 !endif
 MEXEXT = mexw64
 MEX_FLAGS = -largeArrayDims
 
-CC = "$(MSVCROOT)\bin\amd64\cl.exe"
-LINK = "$(MSVCROOT)\bin\amd64\link.exe"
+CC = "$(MSVCROOT)\Tools\MSVC\14.16.27023\bin\Hostx64\x64\cl.exe"
+LINK = "$(MSVCROOT)\Tools\MSVC\14.16.27023\bin\Hostx64\x64\link.exe"
 !if $(MSVSVER) >= 100
 MSVCR_PATH = $(MSVCROOT)\redist\x64\Microsoft.VC$(MSVSVER).CRT
 !else
@@ -88,8 +89,9 @@ MSVCR_PATH = $(MSVCROOT)\redist\amd64\Microsoft.VC$(MSVSVER).CRT
 !endif
 
 LFLAGS = /MACHINE:X64 \
-         /LIBPATH:"$(MSVCROOT)\lib\amd64" \
-         /LIBPATH:"$(WINSDKROOT)\lib\x64"
+         /LIBPATH:"$(MSVCROOT)Tools\MSVC\14.16.27023\lib\x64" \
+         /LIBPATH:"$(WINSDKROOT)lib\10.0.17763.0\ucrt\x64" \
+		 /LIBPATH:"$(WINSDKROOT)lib\10.0.17763.0\um\x64" \
 !else
 !error ARCH = $(ARCH) is an unknown architecture.
 !endif
